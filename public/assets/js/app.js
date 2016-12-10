@@ -27,3 +27,4 @@ $("#previous").on('click', function(){
 	i--
 	displayArticle();
 })
+
