@@ -18,16 +18,35 @@ var app = express();
 
 app.use(express.static("public"));
 
+//Web Scraper
 var cheerio = require("cheerio");
-//Mongo Database======================\
-var mongojs = require('mongojs');
-var databaseUrl = 'uproxx';
-var collections = ["scrapedData"]
 
-//Setting config to DB
-var db = mongojs(databaseUrl, collections);
-db.on('error', function(err) {
-  console.log('Database Error:', err);
+//Mongo Database======================\
+mongoose.connect("mongodb://localhost/articleScraper")
+var db = mongoose.connection;
+// var databaseUrl = 'articleScraper';
+// var collections = ["scrapedData"]
+
+//Any Mongoose Errors
+db.on("error", function(error){
+	console.log("Mongoose Error: ", error);
+});
+
+db.once("open", function(){
+	console.log("Mongoose connection successful.");
+})
+
+var articleLibrary = new Article({
+	name: "Scraped Articles"
+});
+
+articleLibrary.save(function(error, doc){
+	if(error){
+		console.log(error);
+	}
+	else{
+		console.log(doc)
+	}
 })
 
 //=====================================
@@ -56,22 +75,22 @@ app.get('/hello', function(req, res) {
 
 // 	if (title && link) {
 //         // save the data in the scrapedData db
-//         db.scrapedData.save({
-//           title: title,
-//           link: link
-//         }, 
-//         function(err, saved) {
-
-//           if (err) {
-         	
-//          	console.log(err);
-//           }  
-//           else {
-            
-//             console.log(saved);
-//             console.log('done')
-//           }
+//         // db.scrapedData.save({
+//         //   title: title,
+//         //   link: link
+//         // }, 
+//         var newArticle = new Article({
+//         	title: title,
+//         	link: link
 //         });
+//         newArticle.save(function(err, doc){
+//         	if(err){
+//         		console.log(err)
+//         	}
+//         	else{
+//         		console.log(doc);
+//         	}
+//         })
 //       }
 //     });
 // 	//console.log(results);
@@ -80,12 +99,12 @@ app.get('/hello', function(req, res) {
 
 app.get("/all", function(req, res){
 
-	db.scrapedData.find({}, function(error, found){
+	Article.find({}, function(error, doc){
 		if(error){
-			console.log(error)
+			res.send(error);
 		}
 		else{
-			res.json(found)
+			res.send(doc)
 		}
 	})
 })
