@@ -8,6 +8,8 @@ function displayArticle(){
 		$(".title").text(data[i].title)
 		//$(".link").attr('href', data[1].link)
 		$(".link").attr('href', data[i].link).text(data[i].link)
+
+		$('.comments').text(data[i].comments[4].comment)
 		console.log('we here')
 		console.log(data[i].title)
 		console.log(data[i].link)

@@ -16,6 +16,12 @@ var Article = require("./models/article.js")
 //initilaize Express======
 var app = express();
 
+//Body Parser==============
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+
 app.use(express.static("public"));
 
 //Web Scraper
@@ -52,6 +58,20 @@ articleLibrary.save(function(error, doc){
 //=====================================
 app.get('/hello', function(req, res) {
   res.send('hello world');
+});
+
+app.post("/submit", function(req, res) {
+	var comment = req.body;
+	console.log(req.body);
+
+	Article.findOneAndUpdate({}, {$push: {"comments": comment}},{new: true}, function(error, doc){
+		if(error){
+			res.send(error);
+		}
+		else{
+			res.send(doc)
+		}
+	})
 });
 
 
