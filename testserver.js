@@ -1,3 +1,4 @@
+
 // depenecnies===============
 
 var express = require("express");
@@ -60,18 +61,24 @@ app.get('/hello', function(req, res) {
   res.send('hello world');
 });
 
+app.get('/', function(req, res){
+	res.send(index.html)
+	console.log()
+})
+
 app.post("/submit", function(req, res) {
 	var comment = req.body;
 	console.log(req.body);
+	console.log("clicked")
 
-	Article.findOneAndUpdate({}, {$push: {"comments": comment}},{new: true}, function(error, doc){
-		if(error){
-			res.send(error);
-		}
-		else{
-			res.send(doc)
-		}
-	})
+	// Article.findOneAndUpdate({}, {$push: {"comments": comment}},{new: true}, function(error, doc){
+	// 	if(error){
+	// 		res.send(error);
+	// 	}
+	// 	else{
+	// 		res.send(doc)
+	// 	}
+	// })
 });
 
 
